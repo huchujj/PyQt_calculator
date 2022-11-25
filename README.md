@@ -1,2 +1,9 @@
-# new_pyqy_calculator
-오픈소스 소프트웨어 프로젝트 pyqt를 이용한 계산기
+# PyQt_calculator
+The simple calculator based on PyQt5
+This calculator is based on studyingrabbit's work (https://studyingrabbit.tistory.com/23)
+
+## Requirements
+PyQt5 module
+
+### Installation requirements
+    python -m pip install pyqt5
