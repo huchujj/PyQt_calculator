@@ -39,6 +39,10 @@ class Main(QDialog):
         button_product.clicked.connect(lambda state, operation = "*": self.button_operation_clicked(operation))
         button_division.clicked.connect(lambda state, operation = "/": self.button_operation_clicked(operation))
 
+        ### 사칙연산 외 신규 기능 버튼을 클릭했을 때, 각 버튼의 기능이 수행될 수 있도록 설정
+        button_clearAll.clicked.connect(self.button_clearAll_clicked)
+        button_clear.clicked.connect(self.button_clear_clicked)
+
         ### 사칙연산 버튼을 layout_operation 레이아웃에 추가
         layout_button.addWidget(button_plus, 4, 3)
         layout_button.addWidget(button_minus, 3, 3)
@@ -116,13 +120,25 @@ class Main(QDialog):
         solution = eval(equation)
         self.equation.setText(str(solution))
 
-    def button_clear_clicked(self):
+    def button_clearAll_clicked(self):
         self.equation.setText("")
 
     def button_backspace_clicked(self):
         equation = self.equation.text()
         equation = equation[:-1]
         self.equation.setText(equation)
+
+    def button_clear_clicked(self):
+        equation = self.equation.text()
+        if ("+" in equation) or ("-" in equation) or ("*" in equation) or ("/" in equation):
+            index = -1
+            while equation[index].isdigit():
+                index -= 1
+            equation = equation[:index+1]
+        else:
+            equation = ""
+        self.equation.setText(equation)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
