@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import *
-import numpy as np
+import math
 
 class Main(QDialog):
     def __init__(self):
@@ -45,6 +45,7 @@ class Main(QDialog):
         button_clear.clicked.connect(self.button_clear_clicked)
         button_inverse.clicked.connect(self.button_inverse_clicked)
         button_square.clicked.connect(self.button_square_clicked)
+        button_squareRoot.clicked.connect(self.button_squareRoot_clicked)
 
         ### 사칙연산 버튼을 layout_operation 레이아웃에 추가
         layout_button.addWidget(button_plus, 4, 3)
@@ -167,12 +168,29 @@ class Main(QDialog):
             while equation[index].isdigit() or equation[index] == '.':
                 index -= 1
             target = equation[index:]
-            target = np.power(float(target), 2)
+            target = math.pow(float(target), 2)
             equation = equation[:index+1] + str(target)
         else:
             if len(equation) > 0:
                 target = equation
-                target = np.power(float(target), 2)
+                target = math.pow(float(target), 2)
+                equation = str(target)
+        self.equation.setText(equation)
+
+    def button_squareRoot_clicked(self):
+        equation = self.equation.text()
+        index = -1
+        if ("+" in equation) or ("-" in equation) or ("*" in equation) or ("/" in equation):
+            index = -1
+            while equation[index].isdigit() or equation[index] == '.':
+                index -= 1
+            target = equation[index:]
+            target = math.sqrt(float(target))
+            equation = equation[:index+1] + str(target)
+        else:
+            if len(equation) > 0:
+                target = equation
+                target = math.sqrt(float(target))
                 equation = str(target)
         self.equation.setText(equation)
 
