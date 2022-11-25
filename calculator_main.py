@@ -132,7 +132,7 @@ class Main(QDialog):
         equation = self.equation.text()
         if ("+" in equation) or ("-" in equation) or ("*" in equation) or ("/" in equation):
             index = -1
-            while equation[index].isdigit():
+            while equation[index].isdigit() or equation[index] == '.':
                 index -= 1
             equation = equation[:index+1]
         else:
