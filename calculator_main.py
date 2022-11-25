@@ -42,6 +42,7 @@ class Main(QDialog):
         ### 사칙연산 외 신규 기능 버튼을 클릭했을 때, 각 버튼의 기능이 수행될 수 있도록 설정
         button_clearAll.clicked.connect(self.button_clearAll_clicked)
         button_clear.clicked.connect(self.button_clear_clicked)
+        button_inverse.clicked.connect(self.button_inverse_clicked)
 
         ### 사칙연산 버튼을 layout_operation 레이아웃에 추가
         layout_button.addWidget(button_plus, 4, 3)
@@ -139,6 +140,22 @@ class Main(QDialog):
             equation = ""
         self.equation.setText(equation)
 
+    def button_inverse_clicked(self):
+        equation = self.equation.text()
+        index = -1
+        if ("+" in equation) or ("-" in equation) or ("*" in equation) or ("/" in equation):
+            index = -1
+            while equation[index].isdigit() or equation[index] == '.':
+                index -= 1
+            target = equation[index:]
+            target = 1 / float(target)
+            equation = equation[:index+1] + str(target)
+        else:
+            if len(equation) > 0:
+                target = equation
+                target = 1 / float(target)
+                equation = str(target)
+        self.equation.setText(equation)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
