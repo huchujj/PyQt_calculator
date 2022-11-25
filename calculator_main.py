@@ -13,6 +13,7 @@ class Main(QDialog):
         layout_operation= QGridLayout()
         layout_clear_equal = QHBoxLayout()
         layout_number = QGridLayout()
+        layout_button = QGridLayout()
         layout_equation_solution = QFormLayout()
 
         ### 수식 입력과 답 출력을 위한 LineEdit 위젯 생성
