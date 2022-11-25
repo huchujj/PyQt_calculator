@@ -31,6 +31,14 @@ class Main(QDialog):
         button_product = QPushButton("x")
         button_division = QPushButton("/")
 
+        ### 사칙연산 외 신규 연산 기능 버튼 생성
+        button_percent = QPushButton("%")
+        button_clear = QPushButton("CE")
+        button_clearAll = QPushButton("C")
+        button_inverse = QPushButton("1/x")
+        button_square = QPushButton("x^2")
+        button_squareRoot = QPushButton("root x")
+
         ### 사칙연산 버튼을 클릭했을 때, 각 사칙연산 부호가 수식창에 추가될 수 있도록 시그널 설정
         button_plus.clicked.connect(lambda state, operation = "+": self.button_operation_clicked(operation))
         button_minus.clicked.connect(lambda state, operation = "-": self.button_operation_clicked(operation))
@@ -42,7 +50,16 @@ class Main(QDialog):
         layout_operation.addWidget(button_minus, 0, 1)
         layout_operation.addWidget(button_product, 0, 2)
         layout_operation.addWidget(button_division, 0, 3)
+
+        ### 사칙연산 외 신규 연산 기능 버튼을 layout_operation 레이아웃에 추가
+        layout_operation.addWidget(button_percent, 1, 0)
+        layout_operation.addWidget(button_clear, 1, 1)
+        layout_operation.addWidget(button_clearAll, 1, 2)
         
+        layout_operation.addWidget(button_inverse, 2, 0)
+        layout_operation.addWidget(button_square, 2, 1)
+        layout_operation.addWidget(button_squareRoot, 2, 2)
+
         ### =, clear, backspace 버튼 생성
         button_equal = QPushButton("=")
         button_clear = QPushButton("Clear")
