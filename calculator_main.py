@@ -145,8 +145,16 @@ class Main(QDialog):
                 target = float(equation[:index]) * float(equation[index+1:])
             elif equation[index] == '/':
                 target = float(equation[:index]) / float(equation[index+1:])
-            equation = str(target)
+            target = self.distinguish_int_float(target)
+            equation = target
         return equation
+
+    def distinguish_int_float(self, target):
+        target = str(target)
+        if target[-1] == '0' and target[-2] == '.': 
+            return target[:-2]
+        else:
+            return target
 
     def button_clearAll_clicked(self):
         self.equation.setText("")
@@ -176,12 +184,14 @@ class Main(QDialog):
                 index -= 1
             target = equation[index+1:]
             target = 1 / float(target)
-            equation = equation[:index+1] + str(target)
+            target = self.distinguish_int_float(target)
+            equation = equation[:index+1] + target
         else:
             if len(equation) > 0:
                 target = equation
                 target = 1 / float(target)
-                equation = str(target)
+                target = self.distinguish_int_float(target)
+                equation = target
         self.equation.setText(equation)
 
     def button_square_clicked(self):
@@ -193,12 +203,14 @@ class Main(QDialog):
                 index -= 1
             target = equation[index+1:]
             target = math.pow(float(target), 2)
-            equation = equation[:index+1] + str(target)
+            target = self.distinguish_int_float(target)
+            equation = equation[:index+1] + target
         else:
             if len(equation) > 0:
                 target = equation
                 target = math.pow(float(target), 2)
-                equation = str(target)
+                target = self.distinguish_int_float(target)
+                equation = target
         self.equation.setText(equation)
 
     def button_squareRoot_clicked(self):
@@ -209,12 +221,14 @@ class Main(QDialog):
                 index -= 1
             target = equation[index+1:]
             target = math.sqrt(float(target))
-            equation = equation[:index+1] + str(target)
+            target = self.distinguish_int_float(target)
+            equation = equation[:index+1] + target
         else:
             if len(equation) > 0:
                 target = equation
                 target = math.sqrt(float(target))
-                equation = str(target)
+                target = self.distinguish_int_float(target)
+                equation = target
         self.equation.setText(equation)
 
     def button_percent_clicked(self):
@@ -227,9 +241,11 @@ class Main(QDialog):
                 target_front = equation[index+1:]
                 target_back = self.compute_solution(equation[:index])  
                 if equation[index] == '*':
-                    target = str(0.01 * float(target_front))
+                    target = 0.01 * float(target_front)
+                    target = self.distinguish_int_float(target)
                 else:
-                    target = str(float(target_back) * 0.01 * float(target_front))
+                    target = float(target_back) * 0.01 * float(target_front)
+                    target = self.distinguish_int_float(target)
                 equation = str(target_back) + equation[index] + str(target)
                 self.equation.setText(equation)             
 
