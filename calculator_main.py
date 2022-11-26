@@ -117,7 +117,20 @@ class Main(QDialog):
 
     def button_operation_clicked(self, operation):
         equation = self.equation.text()
-        equation += operation
+        if ('+' in equation) or ('-' in equation) or ('*' in equation) or ('/' in equation):
+            index = -1
+            while equation[index].isdigit() or equation[index] == '.':
+                index -= 1
+            if equation[index] == '+':
+                target = float(equation[:index]) + float(equation[index+1:])
+            elif equation[index] == '-':
+                target = float(equation[:index]) - float(equation[index+1:])
+            elif equation[index] == '*':
+                target = float(equation[:index]) * float(equation[index+1:])
+            elif equation[index] == '/':
+                target = float(equation[:index]) / float(equation[index+1:])
+            equation = str(target)
+        equation +=  operation
         self.equation.setText(equation)
 
     def button_equal_clicked(self):
