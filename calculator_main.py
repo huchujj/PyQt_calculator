@@ -128,8 +128,9 @@ class Main(QDialog):
 
     def button_equal_clicked(self):
         equation = self.equation.text()
-        solution = self.compute_solution(equation)
-        self.equation.setText(str(solution))
+        if equation[-1].isdigit(): 
+            equation = self.compute_solution(equation)
+        self.equation.setText(str(equation))
 
     def compute_solution(self, equation):
         if ('+' in equation) or ('-' in equation) or ('*' in equation) or ('/' in equation):
