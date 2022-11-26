@@ -110,6 +110,7 @@ class Main(QDialog):
     #################
     ### functions ###
     #################
+
     def number_button_clicked(self, num):
         equation = self.equation.text()
         equation += str(num)
@@ -117,6 +118,16 @@ class Main(QDialog):
 
     def button_operation_clicked(self, operation):
         equation = self.equation.text()
+        equation = self.compute_solution(equation)
+        equation +=  operation
+        self.equation.setText(equation)
+
+    def button_equal_clicked(self):
+        equation = self.equation.text()
+        solution = self.compute_solution(equation)
+        self.equation.setText(str(solution))
+
+    def compute_solution(self, equation):
         if ('+' in equation) or ('-' in equation) or ('*' in equation) or ('/' in equation):
             index = -1
             while equation[index].isdigit() or equation[index] == '.':
@@ -130,13 +141,7 @@ class Main(QDialog):
             elif equation[index] == '/':
                 target = float(equation[:index]) / float(equation[index+1:])
             equation = str(target)
-        equation +=  operation
-        self.equation.setText(equation)
-
-    def button_equal_clicked(self):
-        equation = self.equation.text()
-        solution = eval(equation)
-        self.equation.setText(str(solution))
+        return equation
 
     def button_clearAll_clicked(self):
         self.equation.setText("")
