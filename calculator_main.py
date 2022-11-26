@@ -46,6 +46,7 @@ class Main(QDialog):
         button_inverse.clicked.connect(self.button_inverse_clicked)
         button_square.clicked.connect(self.button_square_clicked)
         button_squareRoot.clicked.connect(self.button_squareRoot_clicked)
+        button_percent.clicked.connect(self.button_percent_clicked)
 
         ### 사칙연산 버튼을 layout_operation 레이아웃에 추가
         layout_button.addWidget(button_plus, 4, 3)
@@ -150,7 +151,7 @@ class Main(QDialog):
             index = -1
             while equation[index].isdigit() or equation[index] == '.':
                 index -= 1
-            target = equation[index:]
+            target = equation[index+1:]
             target = 1 / float(target)
             equation = equation[:index+1] + str(target)
         else:
@@ -167,7 +168,7 @@ class Main(QDialog):
             index = -1
             while equation[index].isdigit() or equation[index] == '.':
                 index -= 1
-            target = equation[index:]
+            target = equation[index+1:]
             target = math.pow(float(target), 2)
             equation = equation[:index+1] + str(target)
         else:
@@ -179,12 +180,11 @@ class Main(QDialog):
 
     def button_squareRoot_clicked(self):
         equation = self.equation.text()
-        index = -1
         if ("+" in equation) or ("-" in equation) or ("*" in equation) or ("/" in equation):
             index = -1
             while equation[index].isdigit() or equation[index] == '.':
                 index -= 1
-            target = equation[index:]
+            target = equation[index+1:]
             target = math.sqrt(float(target))
             equation = equation[:index+1] + str(target)
         else:
@@ -194,6 +194,21 @@ class Main(QDialog):
                 equation = str(target)
         self.equation.setText(equation)
 
+    def button_percent_clicked(self):
+        equation = self.equation.text()
+        if equation[-1].isdigit():
+            if ("+" in equation) or ("-" in equation) or ("*" in equation) or ("/" in equation):
+                index = -1
+                while equation[index].isdigit() or equation[index] == '.':
+                    index -= 1
+                target_front = equation[index+1:]
+                target_back = eval(equation[:index])  
+                if equation[index] == '*':
+                    target = str(0.01 * float(target_front))
+                else:
+                    target = str(float(target_back) * 0.01 * float(target_front))
+                equation = str(target_back) + equation[index] + str(target)
+                self.equation.setText(equation)             
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
