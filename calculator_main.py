@@ -220,7 +220,7 @@ class Main(QDialog):
                 while equation[index].isdigit() or equation[index] == '.':
                     index -= 1
                 target_front = equation[index+1:]
-                target_back = eval(equation[:index])  
+                target_back = self.compute_solution(equation[:index])  
                 if equation[index] == '*':
                     target = str(0.01 * float(target_front))
                 else:
