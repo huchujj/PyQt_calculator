@@ -1,5 +1,6 @@
 import sys
 from PyQt5.QtWidgets import *
+import math
 
 class Main(QDialog):
     def __init__(self):
@@ -38,6 +39,14 @@ class Main(QDialog):
         button_minus.clicked.connect(lambda state, operation = "-": self.button_operation_clicked(operation))
         button_product.clicked.connect(lambda state, operation = "*": self.button_operation_clicked(operation))
         button_division.clicked.connect(lambda state, operation = "/": self.button_operation_clicked(operation))
+
+        ### 사칙연산 외 신규 기능 버튼을 클릭했을 때, 각 버튼의 기능이 수행될 수 있도록 설정
+        button_clearAll.clicked.connect(self.button_clearAll_clicked)
+        button_clear.clicked.connect(self.button_clear_clicked)
+        button_inverse.clicked.connect(self.button_inverse_clicked)
+        button_square.clicked.connect(self.button_square_clicked)
+        button_squareRoot.clicked.connect(self.button_squareRoot_clicked)
+        button_percent.clicked.connect(self.button_percent_clicked)
 
         ### 사칙연산 버튼을 layout_operation 레이아웃에 추가
         layout_button.addWidget(button_plus, 4, 3)
@@ -116,13 +125,90 @@ class Main(QDialog):
         solution = eval(equation)
         self.equation.setText(str(solution))
 
-    def button_clear_clicked(self):
+    def button_clearAll_clicked(self):
         self.equation.setText("")
 
     def button_backspace_clicked(self):
         equation = self.equation.text()
         equation = equation[:-1]
         self.equation.setText(equation)
+
+    def button_clear_clicked(self):
+        equation = self.equation.text()
+        if ("+" in equation) or ("-" in equation) or ("*" in equation) or ("/" in equation):
+            index = -1
+            while equation[index].isdigit() or equation[index] == '.':
+                index -= 1
+            equation = equation[:index+1]
+        else:
+            equation = ""
+        self.equation.setText(equation)
+
+    def button_inverse_clicked(self):
+        equation = self.equation.text()
+        index = -1
+        if ("+" in equation) or ("-" in equation) or ("*" in equation) or ("/" in equation):
+            index = -1
+            while equation[index].isdigit() or equation[index] == '.':
+                index -= 1
+            target = equation[index+1:]
+            target = 1 / float(target)
+            equation = equation[:index+1] + str(target)
+        else:
+            if len(equation) > 0:
+                target = equation
+                target = 1 / float(target)
+                equation = str(target)
+        self.equation.setText(equation)
+
+    def button_square_clicked(self):
+        equation = self.equation.text()
+        index = -1
+        if ("+" in equation) or ("-" in equation) or ("*" in equation) or ("/" in equation):
+            index = -1
+            while equation[index].isdigit() or equation[index] == '.':
+                index -= 1
+            target = equation[index+1:]
+            target = math.pow(float(target), 2)
+            equation = equation[:index+1] + str(target)
+        else:
+            if len(equation) > 0:
+                target = equation
+                target = math.pow(float(target), 2)
+                equation = str(target)
+        self.equation.setText(equation)
+
+    def button_squareRoot_clicked(self):
+        equation = self.equation.text()
+        if ("+" in equation) or ("-" in equation) or ("*" in equation) or ("/" in equation):
+            index = -1
+            while equation[index].isdigit() or equation[index] == '.':
+                index -= 1
+            target = equation[index+1:]
+            target = math.sqrt(float(target))
+            equation = equation[:index+1] + str(target)
+        else:
+            if len(equation) > 0:
+                target = equation
+                target = math.sqrt(float(target))
+                equation = str(target)
+        self.equation.setText(equation)
+
+    def button_percent_clicked(self):
+        equation = self.equation.text()
+        if equation[-1].isdigit():
+            if ("+" in equation) or ("-" in equation) or ("*" in equation) or ("/" in equation):
+                index = -1
+                while equation[index].isdigit() or equation[index] == '.':
+                    index -= 1
+                target_front = equation[index+1:]
+                target_back = eval(equation[:index])  
+                if equation[index] == '*':
+                    target = str(0.01 * float(target_front))
+                else:
+                    target = str(float(target_back) * 0.01 * float(target_front))
+                equation = str(target_back) + equation[index] + str(target)
+                self.equation.setText(equation)             
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
