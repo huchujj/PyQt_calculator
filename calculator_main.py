@@ -118,8 +118,12 @@ class Main(QDialog):
 
     def button_operation_clicked(self, operation):
         equation = self.equation.text()
-        equation = self.compute_solution(equation)
-        equation +=  operation
+        if (equation[-1] != '+') and (equation[-1] != '-') and (equation[-1] != '*') and (equation[-1] != '/'):
+            equation = self.compute_solution(equation)
+            equation +=  operation
+        else: 
+            if equation[-1] != operation:
+                equation = equation[:-1] + operation
         self.equation.setText(equation)
 
     def button_equal_clicked(self):
