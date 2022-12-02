@@ -16,9 +16,10 @@ class Main(QDialog):
 
         ### 수식 입력과 답 출력을 위한 LineEdit 위젯 생성
         self.equation = QLineEdit("")
+        self.solution = QLineEdit("")
 
         ### layout_equation_solution 레이아웃에 수식, 답 위젯을 추가
-        layout_equation_solution.addRow(self.equation)
+        layout_equation_solution.addRow(self.solution)
 
         ### 사칙연상 버튼 생성
         button_plus = QPushButton("+")
@@ -39,6 +40,7 @@ class Main(QDialog):
         button_minus.clicked.connect(lambda state, operation = "-": self.button_operation_clicked(operation))
         button_product.clicked.connect(lambda state, operation = "*": self.button_operation_clicked(operation))
         button_division.clicked.connect(lambda state, operation = "/": self.button_operation_clicked(operation))
+        button_percent.clicked.connect(lambda state, operation = "%": self.button_operation_clicked(operation))
 
         ### 사칙연산 외 신규 기능 버튼을 클릭했을 때, 각 버튼의 기능이 수행될 수 있도록 설정
         button_clearAll.clicked.connect(self.button_clearAll_clicked)
@@ -46,7 +48,6 @@ class Main(QDialog):
         button_inverse.clicked.connect(self.button_inverse_clicked)
         button_square.clicked.connect(self.button_square_clicked)
         button_squareRoot.clicked.connect(self.button_squareRoot_clicked)
-        button_percent.clicked.connect(self.button_percent_clicked)
 
         ### 사칙연산 버튼을 layout_operation 레이아웃에 추가
         layout_button.addWidget(button_plus, 4, 3)
@@ -106,6 +107,7 @@ class Main(QDialog):
 
         self.setLayout(main_layout)
         self.show()
+        
 
     #################
     ### functions ###
@@ -113,27 +115,36 @@ class Main(QDialog):
 
     def number_button_clicked(self, num):
         equation = self.equation.text()
+        solution = self.solution.text()
         equation += str(num)
+        solution += str(num)
         self.equation.setText(equation)
+        self.solution.setText(solution)
 
     def button_operation_clicked(self, operation):
         equation = self.equation.text()
-        if (equation[-1] != '+') and (equation[-1] != '-') and (equation[-1] != '*') and (equation[-1] != '/'):
+        solution = self.solution.text()
+        solution = ""
+        if (equation[-1] != '+') and (equation[-1] != '-') and (equation[-1] != '*') and (equation[-1] != '/') and (equation[-1] != '%'):
             equation = self.compute_solution(equation)
             equation +=  operation
         else: 
             if equation[-1] != operation:
                 equation = equation[:-1] + operation
         self.equation.setText(equation)
+        self.solution.setText(solution)
 
     def button_equal_clicked(self):
         equation = self.equation.text()
+        solution = self.solution.text()
         if equation[-1].isdigit(): 
             equation = self.compute_solution(equation)
+            solution = equation
         self.equation.setText(str(equation))
+        self.solution.setText(str(solution))
 
     def compute_solution(self, equation):
-        if ('+' in equation) or ('-' in equation) or ('*' in equation) or ('/' in equation):
+        if ('+' in equation) or ('-' in equation) or ('*' in equation) or ('/' in equation) or ('%' in equation):
             index = -1
             while equation[index].isdigit() or equation[index] == '.':
                 index -= 1
@@ -145,6 +156,8 @@ class Main(QDialog):
                 target = float(equation[:index]) * float(equation[index+1:])
             elif equation[index] == '/':
                 target = float(equation[:index]) / float(equation[index+1:])
+            elif equation[index] == '%':
+                target = float(equation[:index]) % float(equation[index+1:])
             target = self.distinguish_int_float(target)
             equation = target
         return equation
@@ -158,15 +171,20 @@ class Main(QDialog):
 
     def button_clearAll_clicked(self):
         self.equation.setText("")
+        self.solution.setText("")
 
     def button_backspace_clicked(self):
         equation = self.equation.text()
-        equation = equation[:-1]
+        solution = self.solution.text()
+        if len(equation) > 0 and len(solution) > 0:
+            equation = equation[:-1]
+            solution = solution[:-1]
+        self.solution.setText(solution)
         self.equation.setText(equation)
 
     def button_clear_clicked(self):
         equation = self.equation.text()
-        if ("+" in equation) or ("-" in equation) or ("*" in equation) or ("/" in equation):
+        if ("+" in equation) or ("-" in equation) or ("*" in equation) or ("/" in equation) or ("%" in equation):
             index = -1
             while equation[index].isdigit() or equation[index] == '.':
                 index -= 1
@@ -174,11 +192,12 @@ class Main(QDialog):
         else:
             equation = ""
         self.equation.setText(equation)
+        self.solution.setText("")
 
     def button_inverse_clicked(self):
         equation = self.equation.text()
         index = -1
-        if ("+" in equation) or ("-" in equation) or ("*" in equation) or ("/" in equation):
+        if ("+" in equation) or ("-" in equation) or ("*" in equation) or ("/" in equation) or ("%" in equation):
             index = -1
             while equation[index].isdigit() or equation[index] == '.':
                 index -= 1
@@ -192,13 +211,13 @@ class Main(QDialog):
                 target = 1 / float(target)
                 target = self.distinguish_int_float(target)
                 equation = target
+        self.solution.setText(target)
         self.equation.setText(equation)
 
     def button_square_clicked(self):
         equation = self.equation.text()
         index = -1
-        if ("+" in equation) or ("-" in equation) or ("*" in equation) or ("/" in equation):
-            index = -1
+        if ("+" in equation) or ("-" in equation) or ("*" in equation) or ("/" in equation) or ("%" in equation):
             while equation[index].isdigit() or equation[index] == '.':
                 index -= 1
             target = equation[index+1:]
@@ -211,11 +230,12 @@ class Main(QDialog):
                 target = math.pow(float(target), 2)
                 target = self.distinguish_int_float(target)
                 equation = target
+        self.solution.setText(target)
         self.equation.setText(equation)
 
     def button_squareRoot_clicked(self):
         equation = self.equation.text()
-        if ("+" in equation) or ("-" in equation) or ("*" in equation) or ("/" in equation):
+        if ("+" in equation) or ("-" in equation) or ("*" in equation) or ("/" in equation) or ("%" in equation):
             index = -1
             while equation[index].isdigit() or equation[index] == '.':
                 index -= 1
@@ -229,25 +249,8 @@ class Main(QDialog):
                 target = math.sqrt(float(target))
                 target = self.distinguish_int_float(target)
                 equation = target
-        self.equation.setText(equation)
-
-    def button_percent_clicked(self):
-        equation = self.equation.text()
-        if equation[-1].isdigit():
-            if ("+" in equation) or ("-" in equation) or ("*" in equation) or ("/" in equation):
-                index = -1
-                while equation[index].isdigit() or equation[index] == '.':
-                    index -= 1
-                target_front = equation[index+1:]
-                target_back = self.compute_solution(equation[:index])  
-                if equation[index] == '*':
-                    target = 0.01 * float(target_front)
-                    target = self.distinguish_int_float(target)
-                else:
-                    target = float(target_back) * 0.01 * float(target_front)
-                    target = self.distinguish_int_float(target)
-                equation = str(target_back) + equation[index] + str(target)
-                self.equation.setText(equation)             
+        self.solution.setText(target)
+        self.equation.setText(equation)        
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
